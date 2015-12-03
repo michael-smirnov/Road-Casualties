@@ -1,10 +1,12 @@
 import pandas
 import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import hamming_loss
 import random
 
 import GradientBoostingTrees.functions as gbt_func
+import NaiveBayesClassifier.functions as gnb_func
 
 DATA_PATH = 'DataFile/roadcasualties.csv'
 RANDOM_SEED = 27
@@ -38,7 +40,7 @@ class DataPreparation:
     MakeUnified = 0
     Binarise = 1
 
-CLASSIFIERS = {'gbt': GradientBoostingClassifier}
+CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'gnb':GaussianNB }
 CLASSIFIER_PARAMETERS = {
     'gbt': {'warm_start': True, 'max_depth': 5, 'verbose': 1, 'n_estimators': 50}
 }
@@ -46,7 +48,8 @@ ADDITIONAL_CLASSIFIER_FUNCTIONS = {
     'gbt': [gbt_func.gbt_print_importances]
 }
 COMPLEXITY_GROWING_ALGORITHMS = {
-    'gbt': gbt_func.gbt_estimators_growing
+    'gbt': gbt_func.gbt_estimators_growing,
+    'gnb': gnb_func.gnb_estimators_growing
 }
 TRAIN_TEST_INDEXES = {
     'determine': get_determine_train_test_indexes,
