@@ -1,7 +1,7 @@
 import pandas
 import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
 from sklearn.metrics import hamming_loss
 import random
 
@@ -40,26 +40,27 @@ class DataPreparation:
     MakeUnified = 0
     Binarise = 1
 
-CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'gnb':GaussianNB }
+CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'svc':SVC }
 CLASSIFIER_PARAMETERS = {
-    'gbt': {'warm_start': True, 'max_depth': 5, 'verbose': 1, 'n_estimators': 50}
+    'gbt': {'warm_start': True, 'max_depth': 5, 'verbose': 1, 'n_estimators': 50},
+    'svc':{'kernel':'rbf','tol': 0.00001}
 }
 ADDITIONAL_CLASSIFIER_FUNCTIONS = {
     'gbt': [gbt_func.gbt_print_importances]
 }
 COMPLEXITY_GROWING_ALGORITHMS = {
     'gbt': gbt_func.gbt_estimators_growing,
-    'gnb': gnb_func.gnb_estimators_growing
+    'svc': gnb_func.gnb_estimators_growing
 }
 TRAIN_TEST_INDEXES = {
     'determine': get_determine_train_test_indexes,
     'random': get_random_train_test_indexes
 }
 
-TESTING_MODE = TestingMode.SingleTest
+TESTING_MODE = TestingMode.ByComplexityGrowing
 TRAIN_TEST_SELECTING_MODE = 'random'
-TESTED_CLASSIFIERS = 'all'
-DATA_PREPARATION = DataPreparation.Binarise
+TESTED_CLASSIFIERS = 'svc'
+DATA_PREPARATION = DataPreparation.MakeUnified
 
 
 def unique_attribute(arr):
