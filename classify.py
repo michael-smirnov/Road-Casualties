@@ -1,12 +1,19 @@
 import pandas
 import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier
+<<<<<<< HEAD
 from sklearn.svm import SVC
+=======
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+>>>>>>> 21fa2a94a2864f9d448f4bd2701ac726988a36d8
 from sklearn.metrics import hamming_loss
 import random
-
+import plot
+from sklearn import metrics
 import GradientBoostingTrees.functions as gbt_func
 import NaiveBayesClassifier.functions as gnb_func
+import RandomForest.functions as rf_func
 
 DATA_PATH = 'DataFile/roadcasualties.csv'
 RANDOM_SEED = 27
@@ -40,17 +47,29 @@ class DataPreparation:
     MakeUnified = 0
     Binarise = 1
 
+<<<<<<< HEAD
 CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'svc':SVC }
 CLASSIFIER_PARAMETERS = {
     'gbt': {'warm_start': True, 'max_depth': 5, 'verbose': 1, 'n_estimators': 50},
     'svc':{'kernel':'rbf','tol': 0.00001}
+=======
+CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'gnb':GaussianNB, 'rf': RandomForestClassifier }
+CLASSIFIER_PARAMETERS = {
+    'gbt': {'warm_start': True, 'max_depth': 5, 'verbose': 1, 'n_estimators': 50},
+    'rf': {'n_estimators': 148,'n_jobs': 2,'random_state': RANDOM_SEED,'max_features': 5}
+>>>>>>> 21fa2a94a2864f9d448f4bd2701ac726988a36d8
 }
 ADDITIONAL_CLASSIFIER_FUNCTIONS = {
     'gbt': [gbt_func.gbt_print_importances]
 }
 COMPLEXITY_GROWING_ALGORITHMS = {
     'gbt': gbt_func.gbt_estimators_growing,
+<<<<<<< HEAD
     'svc': gnb_func.gnb_estimators_growing
+=======
+    'gnb': gnb_func.gnb_estimators_growing,
+    'rf': rf_func.rf_estimators_growing
+>>>>>>> 21fa2a94a2864f9d448f4bd2701ac726988a36d8
 }
 TRAIN_TEST_INDEXES = {
     'determine': get_determine_train_test_indexes,
@@ -150,8 +169,14 @@ if __name__ == '__main__':
 
             if TESTING_MODE == TestingMode.SingleTest:
                 classifier.fit(x_train, y_train)
-                print('Train err:', hamming_loss(y_train, classifier.predict(x_train)))
-                print('Test err:', hamming_loss(y_test, classifier.predict(x_test)))
+                train_predict =  classifier.predict(x_train)
+                test_predict = classifier.predict(x_test)
+                
+                plot.plot_classification_report(metrics.confusion_matrix(y_train,train_predict))                
+                print('Train err:', hamming_loss(y_train, train_predict))
+                
+                plot.plot_classification_report(metrics.confusion_matrix(y_test, test_predict))
+                print('Test err:', hamming_loss(y_test, test_predict))
 
                 for function in additional_functions:
                     function(classifier)
