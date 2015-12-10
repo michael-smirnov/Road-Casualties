@@ -1,12 +1,8 @@
 import pandas
 import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier
-<<<<<<< HEAD
 from sklearn.svm import SVC
-=======
-from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
->>>>>>> 21fa2a94a2864f9d448f4bd2701ac726988a36d8
 from sklearn.metrics import hamming_loss
 import random
 import plot
@@ -47,29 +43,19 @@ class DataPreparation:
     MakeUnified = 0
     Binarise = 1
 
-<<<<<<< HEAD
 CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'svc':SVC }
 CLASSIFIER_PARAMETERS = {
     'gbt': {'warm_start': True, 'max_depth': 5, 'verbose': 1, 'n_estimators': 50},
     'svc':{'kernel':'rbf','tol': 0.00001}
-=======
-CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'gnb':GaussianNB, 'rf': RandomForestClassifier }
-CLASSIFIER_PARAMETERS = {
-    'gbt': {'warm_start': True, 'max_depth': 5, 'verbose': 1, 'n_estimators': 50},
     'rf': {'n_estimators': 148,'n_jobs': 2,'random_state': RANDOM_SEED,'max_features': 5}
->>>>>>> 21fa2a94a2864f9d448f4bd2701ac726988a36d8
 }
 ADDITIONAL_CLASSIFIER_FUNCTIONS = {
     'gbt': [gbt_func.gbt_print_importances]
 }
 COMPLEXITY_GROWING_ALGORITHMS = {
     'gbt': gbt_func.gbt_estimators_growing,
-<<<<<<< HEAD
     'svc': gnb_func.gnb_estimators_growing
-=======
-    'gnb': gnb_func.gnb_estimators_growing,
     'rf': rf_func.rf_estimators_growing
->>>>>>> 21fa2a94a2864f9d448f4bd2701ac726988a36d8
 }
 TRAIN_TEST_INDEXES = {
     'determine': get_determine_train_test_indexes,
