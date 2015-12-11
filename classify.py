@@ -8,7 +8,7 @@ import random
 import plot
 from sklearn import metrics
 import GradientBoostingTrees.functions as gbt_func
-import NaiveBayesClassifier.functions as gnb_func
+import SupportVectorMachine.functions as svc_func
 import RandomForest.functions as rf_func
 
 DATA_PATH = 'DataFile/roadcasualties.csv'
@@ -43,10 +43,10 @@ class DataPreparation:
     MakeUnified = 0
     Binarise = 1
 
-CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'svc':SVC }
+CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'svc':SVC, 'rf': RandomForestClassifier }
 CLASSIFIER_PARAMETERS = {
     'gbt': {'warm_start': True, 'max_depth': 5, 'verbose': 1, 'n_estimators': 50},
-    'svc':{'kernel':'rbf','tol': 0.00001}
+    'svc':{'kernel':'rbf','tol': 0.00001},
     'rf': {'n_estimators': 148,'n_jobs': 2,'random_state': RANDOM_SEED,'max_features': 5}
 }
 ADDITIONAL_CLASSIFIER_FUNCTIONS = {
@@ -54,7 +54,7 @@ ADDITIONAL_CLASSIFIER_FUNCTIONS = {
 }
 COMPLEXITY_GROWING_ALGORITHMS = {
     'gbt': gbt_func.gbt_estimators_growing,
-    'svc': gnb_func.gnb_estimators_growing
+    'svc': svc_func.gnb_estimators_growing,
     'rf': rf_func.rf_estimators_growing
 }
 TRAIN_TEST_INDEXES = {
