@@ -39,9 +39,10 @@ class TestingMode:
 
 
 class DataPreparation:
-    NotPrepare = -1
-    MakeUnified = 0
-    Binarise = 1
+    NotPrepare = 1
+    MakeUnified = 2
+    AddCovarianceColumns = 6
+    Binarise = 10
 
 CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'svc':SVC, 'rf': RandomForestClassifier }
 CLASSIFIER_PARAMETERS = {
@@ -62,10 +63,10 @@ TRAIN_TEST_INDEXES = {
     'random': get_random_train_test_indexes
 }
 
-TESTING_MODE = TestingMode.ByComplexityGrowing
-TRAIN_TEST_SELECTING_MODE = 'random'
-TESTED_CLASSIFIERS = 'svc'
-DATA_PREPARATION = DataPreparation.MakeUnified
+TESTING_MODE = TestingMode.SingleTest
+TRAIN_TEST_SELECTING_MODE = 'determine'
+TESTED_CLASSIFIERS = 'gbt'
+DATA_PREPARATION = DataPreparation.AddCovarianceColumns
 
 
 def unique_attribute(arr):
@@ -77,7 +78,9 @@ if __name__ == '__main__':
     data = pandas.read_csv(DATA_PATH)
     print("Dataset loaded")
 
-    if DATA_PREPARATION >= DataPreparation.MakeUnified:
+    if DATA_PREPARATION & DataPreparation.MakeUnified:
+        DATA_PREPARATION -= DataPreparation.MakeUnified
+
         print('Transforming data set to int array...')
         frame = {'Crash_Year': data['Crash_Year'],
                  'Casualty_Severity': unique_attribute(data['Casualty_Severity']),
@@ -89,7 +92,20 @@ if __name__ == '__main__':
 
         data = pandas.DataFrame(data=frame)
 
-        if DATA_PREPARATION == DataPreparation.Binarise:
+        if DATA_PREPARATION & DataPreparation.AddCovarianceColumns:
+            rnd = random.Random(RANDOM_SEED)
+
+            cols = list(data.columns)
+            for i in range(0, len(cols)):
+                if cols[i] != PREDICTING_ATTRIBUTE:
+                    for j in range(i+1, len(cols)):
+                        if cols[j] != PREDICTING_ATTRIBUTE:
+                            rand_add = 0
+                            if rnd.randint(1, 100) <= 15:
+                                rand_add = rnd.randint(-5, 5) 
+                            data[cols[i] + ' ' + cols[j]] = data[cols[i]] + data[cols[j]] + rand_add
+
+        if DATA_PREPARATION & DataPreparation.Binarise:
             print('Binarising data set...')
 
             count_values_on_column = []
@@ -126,7 +142,7 @@ if __name__ == '__main__':
     x_test, y_test = x.ix[test_indices], y.ix[test_indices]
     print('Test set made successfully')
 
-    if DATA_PREPARATION != DataPreparation.NotPrepare:
+    if (DATA_PREPARATION & DataPreparation.NotPrepare) != DataPreparation.NotPrepare:
         x_train = np.array(x_train, dtype=np.float32, order='C')
         y_train = np.array(y_train, dtype=np.float32, order='C')
         x_test = np.array(x_test, dtype=np.float32, order='C')
@@ -155,10 +171,10 @@ if __name__ == '__main__':
 
             if TESTING_MODE == TestingMode.SingleTest:
                 classifier.fit(x_train, y_train)
-                train_predict =  classifier.predict(x_train)
+                train_predict = classifier.predict(x_train)
                 test_predict = classifier.predict(x_test)
                 
-                plot.plot_classification_report(metrics.confusion_matrix(y_train,train_predict))                
+                plot.plot_classification_report(metrics.confusion_matrix(y_train, train_predict))
                 print('Train err:', hamming_loss(y_train, train_predict))
                 
                 plot.plot_classification_report(metrics.confusion_matrix(y_test, test_predict))

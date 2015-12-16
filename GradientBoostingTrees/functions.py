@@ -8,8 +8,8 @@ def gbt_print_importances(clf):
 
 def gbt_estimators_growing(clf, x_test, y_test, x_train, y_train):
     estimators = [1, 2, 3, 4, 5, 10, 20, 30, 40, 50] + \
-                 [i for i in range(100, 1000, 100)] + \
-                 [i for i in range(1000, 6000, 1000)]
+                 [i for i in range(100, 1000, 100)] #+ \
+                 #[i for i in range(1000, 6000, 1000)]
 
     err_train = []
     err_test = []
