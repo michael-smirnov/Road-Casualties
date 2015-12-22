@@ -47,7 +47,7 @@ class DataPreparation:
 CLASSIFIERS = {'gbt': GradientBoostingClassifier, 'svc':SVC, 'rf': RandomForestClassifier }
 CLASSIFIER_PARAMETERS = {
     'gbt': {'warm_start': True, 'max_depth': 5, 'verbose': 1, 'n_estimators': 50},
-    'svc':{'kernel':'rbf','tol': 0.00001},
+    'svc':{'kernel':'rbf','tol': 0.00001, 'max_iter':100000},
     'rf': {'n_estimators': 148,'n_jobs': 2,'random_state': RANDOM_SEED,'max_features': 5}
 }
 ADDITIONAL_CLASSIFIER_FUNCTIONS = {
@@ -63,9 +63,9 @@ TRAIN_TEST_INDEXES = {
     'random': get_random_train_test_indexes
 }
 
-TESTING_MODE = TestingMode.SingleTest
-TRAIN_TEST_SELECTING_MODE = 'determine'
-TESTED_CLASSIFIERS = 'gbt'
+TESTING_MODE = TestingMode.ByComplexityGrowing
+TRAIN_TEST_SELECTING_MODE = 'random'
+TESTED_CLASSIFIERS = 'svc'
 DATA_PREPARATION = DataPreparation.AddCovarianceColumns
 
 
